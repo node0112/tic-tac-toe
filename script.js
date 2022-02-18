@@ -457,6 +457,14 @@ function Player(playername,token,score){
     return {name: playername, token: token, score:score }
 }
 function infoCapture(){
+    let player1name="Bot 1"
+    let player2_Name="sid"
+    let score=0
+    player = new Player(player1name,"o",score)
+    playerToArray(player)
+    player = new Player(player2_Name,"x",score)
+    playerToArray(player)
+    /*
     let player1name=document.querySelector('.player1-name').value
     let player2_Name
     let score=0
@@ -469,7 +477,7 @@ function infoCapture(){
     player = new Player(player1name,tokenSelection,score)
     playerToArray(player)
     player = new Player(player2_Name,player2Token.textContent,score)
-    playerToArray(player)
+    playerToArray(player)*/
 }
 function playerToArray(player){
     players.push(player)
@@ -533,8 +541,11 @@ function makeGrid(){
         };
 }
 function gridShadowIn() {
+    let i=1
     let items = document.querySelectorAll('.grid-item');
     items.forEach(item => {
+        item.setAttribute('id',i)
+        i++
       item.addEventListener('mouseover', () => {
           if(item.textContent==""){
         item.style.boxShadow = "0 0 20px yellowgreen";
@@ -545,7 +556,7 @@ function gridShadowIn() {
       });
     });
   }
-  function gridShadowOut() {
+function gridShadowOut() {
     let items = document.querySelectorAll('.grid-item');
     items.forEach(item => {
       item.addEventListener('mouseout', () => {
@@ -553,11 +564,13 @@ function gridShadowIn() {
       });
     });
   }
-  function gridTokenCreator(token) {
+function gridTokenCreator(token) {
     let items = document.querySelectorAll('.grid-item');
     items.forEach(item => {
       item.addEventListener('click', () => {
-          let player2=players[1].name
+        let player2=players[1].name
+        gridNum=item.id
+        gameboardCreator(gridNum,token)
         if(item.textContent==""){
             item.textContent=token
             if(playerSelector=="human"){
@@ -572,7 +585,8 @@ function gridShadowIn() {
       });
     });
   }
-  function gridTokenSelector(player){
+
+function gridTokenSelector(player){
       if(players[player].token=="x"){
          gridTokenCreator("x")
       }
@@ -586,4 +600,13 @@ function gridShadowIn() {
   }
   function humanTokenPlace(){
       gridTokenCreator(players[1].token)
+  }
+
+  
+  var gameBoard = ["","","","","","","","",""]
+  
+
+  function gameboardCreator(gridNum,token){
+      gameBoard[gridNum-1]=token
+      console.log(gameBoard)
   }
