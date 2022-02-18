@@ -4,6 +4,7 @@ const themeSwitch=document.querySelector('.theme-switch')
 const computerBtn=document.querySelector('.computer-container')
 const cardsContainer=document.querySelector('.player-card-container')
 const sidebar=document.querySelector('.sidebar')
+const btns=document.querySelector('.btn')
 const humanBtn=document.querySelector('.human-container')
 const player2img=document.querySelector('.player2-image')
 const player2Token=document.querySelector(".player2-token")
@@ -181,6 +182,7 @@ humanBtn.addEventListener('click', ()=>{
     if(condition==true){
     playerSelector="human"
     player2="human"
+    startAnimation()
     player2Token.classList.add('hidden')
     player2Header.classList.add("hidden")
     headerToken.classList.remove('hidden')
@@ -199,7 +201,6 @@ humanBtn.addEventListener('click', ()=>{
     computerBtn.style.backgroundColor="rgb(221, 178, 84)"
     computerBtn.style.boxShadow="none"
     computerBtn.style.color="black"
-    startContainer.classList.remove('hidden')
     }, 300);
 }
 else{
@@ -248,22 +249,39 @@ startBtn.addEventListener('mouseout', ()=>{
     startBtn.style.color="yellowgreen"
 })
 
-
+startAnimation()
 startBtn.addEventListener('click', ()=>{
+    clearScreen()
+    playerSelector="human"
+    player2="human"
+    player2Token.textContent="o"
+    tokenSelection="x"
+    /*
     if(playerSelector=="human"){
-    field=player2Name
-    checkvalue(field)
-    if(condition==true){
-
+        field=player2Name
+        checkvalue(field)
+        if(condition==true){
+            clearScreen()
+        }
+        else{
+            alert("Make Sure You Have Chosen and Filled Every Value for Player 1!") 
+        }
     }
     else{
-        alert("Make Sure You Have Chosen and Filled Every Value for Player 1!") 
+        clearScreen()
     }
-    }
-    else{
-
-    }
+    */
 })
+
+/* Set the width of the side navigation to 250px */
+function openNav() {
+    document.querySelector(".sidenav").style.width = "20%";
+  }
+  
+  /* Set the width of the side navigation to 0 */
+  function closeNav() {
+    document.querySelector(".sidenav").style.width = "0";
+  }
 //////////////////////////////////START SCREEN FUNCTIONS HERE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 function checkvalue(field){
@@ -306,7 +324,6 @@ function buttonAnimationMouseOver(button,button2,color,color2,selection){
     button.style.backgroundColor=buttoncolor
     button.style.color=textColor
     button.style.width="70%"
-    console.log(buttoncolor)
     if(selection=="o" || selection=="computer"){
         button2.style.backgroundColor=color2
         button2.style.color="black"
@@ -382,6 +399,9 @@ function themeSwitcher(){//dark or light theme
         startContainer.style.backgroundColor="black"
         startBtn.style.backgroundColor="white"
         sidebar.style.backgroundColor="white"
+        document.querySelector('.logo').style.backgroundColor="white"
+        document.querySelector('.sidenav').style.backgroundColor="white"
+        document.querySelector('.sidebar-footer').style.color="black"
         cardsContainer.style.backgroundColor="black"
         image1.style.backgroundColor="white"
         image2.style.backgroundColor="white"
@@ -404,7 +424,10 @@ function themeSwitcher(){//dark or light theme
         startContainer.style.backgroundColor="white"
         startBtn.style.backgroundColor="black"
         startContainer.style.color=="white"
-        sidebar.style.backgroundColor="black"
+        sidebar.style.backgroundColor="rgb(39, 38, 38)"
+        document.querySelector('.logo').style.backgroundColor="rgb(39, 38, 38)"
+        document.querySelector('.sidenav').style.backgroundColor="black"
+        document.querySelector('.sidebar-footer').style.color="white"
         cardsContainer.style.backgroundColor="white"
         image1.style.backgroundColor="black"
         image2.style.backgroundColor="black"
@@ -421,7 +444,146 @@ function themeSwitcher(){//dark or light theme
         }
     }
 }
+function fadeScreen(element){
+      element.style.opacity="0"
+}
 
 /////////////////////GAME FUNCTIONS HERE\\\\\\\\\\\\\\\\\\\\\\\\
+let players= [];
+let player
+const grids=document.querySelector('.grids')
 
-function Player()
+function Player(playername,token,score){
+    return {name: playername, token: token, score:score }
+}
+function infoCapture(){
+    let player1name=document.querySelector('.player1-name').value
+    let player2_Name
+    let score=0
+    if(player2=="human"){
+        player2_Name=document.querySelector('.player2name').value
+    }
+    else if(player2=="computer"){
+        player2_name="computer"
+    }
+    player = new Player(player1name,tokenSelection,score)
+    playerToArray(player)
+    player = new Player(player2_Name,player2Token.textContent,score)
+    playerToArray(player)
+}
+function playerToArray(player){
+    players.push(player)
+}
+
+function clearScreen(){
+    infoCapture()
+        console.log(players)
+        const playerContainer=document.querySelector('.player-card-container')
+        playerContainer.style.opacity="0"
+        document.querySelector('.footer').style.opacity="0"
+        sidebar.classList.remove('hidden')
+        setTimeout(() => {
+            document.querySelector('.footer').classList.add('hidden')
+            document.querySelector('.game-container').classList.remove('hidden')
+            playerContainer.classList.add('hidden')
+            document.querySelector('.content-wrapper').style.justifyContent="flex-start"
+            document.querySelector('.footer').classList.add('.hidden')
+            sidebar.style.width="20%"
+            btns.style.width="auto"
+            btns.style.opacity="1"
+            sidebar.style.opacity="1"
+            grids.style.opacity="1"
+            document.querySelector('.logo').style.backgroundColor="rgb(39, 38, 38)"
+            makeGrid()
+            gridShadowIn()
+            gridShadowOut()
+            gridTokenSelector(0)
+        }, 1000);
+}
+
+function makeGrid(){
+    grids.style.setProperty('--grid-rows',3)
+    grids.style.setProperty('--grid-columns',3)
+    for (let i = 0; i <= (3 * 3); i++) { //makes tic tac style grid
+        let items = document.querySelectorAll('.grid-item');
+          let cell = document.createElement("div");
+            items.forEach(item => {
+                if(i==1){
+              cell.style.borderRight = "3px solid black";
+              cell.style.borderLeft="3px solid black"
+                }
+               else if(i==4){ 
+              cell.style.borderRight = "3px solid black";
+              cell.style.borderBottom = "3px solid black";
+              cell.style.borderTop= "3px solid black";
+              cell.style.borderLeft="3px solid black"
+                }
+                else if (i==3 || i==5){
+                    cell.style.borderTop="3px solid black"
+                    cell.style.borderBottom="3px solid black"
+                }
+                else if(i==7){
+                  cell.style.borderLeft="3px solid black"
+                  cell.style.borderRight="3px solid black"
+                }
+          })
+  
+        cell.classList.add('grid-item');
+        grids.appendChild(cell);
+        };
+}
+function gridShadowIn() {
+    let items = document.querySelectorAll('.grid-item');
+    items.forEach(item => {
+      item.addEventListener('mouseover', () => {
+          if(item.textContent==""){
+        item.style.boxShadow = "0 0 20px yellowgreen";
+          }
+          else{
+            item.style.boxShadow = "0 0 20px tomato";
+          }
+      });
+    });
+  }
+  function gridShadowOut() {
+    let items = document.querySelectorAll('.grid-item');
+    items.forEach(item => {
+      item.addEventListener('mouseout', () => {
+        item.style.boxShadow = "none";
+      });
+    });
+  }
+  function gridTokenCreator(token) {
+    let items = document.querySelectorAll('.grid-item');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+          let player2=players[1].name
+        if(item.textContent==""){
+            item.textContent=token
+            if(playerSelector=="human"){
+            if(token=="x"){
+                gridTokenCreator(token="o")
+            }
+            else if(token=="o"){
+                gridTokenCreator(token="x")
+            }
+        }
+        }
+      });
+    });
+  }
+  function gridTokenSelector(player){
+      if(players[player].token=="x"){
+         gridTokenCreator("x")
+      }
+      else if(players[player].token=="o"){//change color on scoreboard and token
+          gridTokenCreator("o")
+      }
+  }
+
+  function computerTokenPlace(){//using the minimax algorithm
+
+  }
+  function humanTokenPlace(){
+      gridTokenCreator(players[1].token)
+  }
