@@ -89,7 +89,7 @@ ul{
     transition: all 1s;
     width: 0;
 }
-.restart-button{
+.restart-button,.newgame-button{
     padding: 5px;
     font-family: 'monaco';
     background-color: rgb(166, 255, 0);
@@ -289,8 +289,8 @@ ul{
 }
 
 .grid-item{
-transition: all 0.5s;
-color: darkslategrey;
+transition: all 1s;
+color: black;
 border: none;
 text-align: center;
 display: flex;

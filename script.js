@@ -14,6 +14,7 @@ const headerToken=document.querySelector('.header-token')
 const startContainer=document.querySelector('.start-container')
 const startBtn=document.querySelector(".start")
 let input=document.querySelectorAll('input')
+let gridID
 let theme="light"
 let player2
 let tokenSelection=""
@@ -392,7 +393,14 @@ function buttonCheck(){
 function themeSwitcher(){//dark or light theme
     const image1=document.querySelector('.player1-image')
     const image2=document.querySelector('.player2-image')
+    let items=document.querySelectorAll('.grid-item')
     if(theme=="light"){
+        items.forEach(item=>{
+            item.style.borderColor="white"
+            if(item.style.color!="yellowgreen"){
+            item.style.color="white"
+            }
+        })
         theme="dark"
         textColor="black"
         buttoncolor="white"
@@ -418,6 +426,12 @@ function themeSwitcher(){//dark or light theme
         }
     }
     else if(theme=="dark"){
+        items.forEach(item=>{
+            item.style.borderColor="black"
+            if(item.style.color!="yellowgreen"){
+            item.style.color="black"
+            }
+        })
         theme="light"
         textColor="white"
         buttoncolor="black"
@@ -496,7 +510,7 @@ function clearScreen(){
             playerContainer.classList.add('hidden')
             document.querySelector('.content-wrapper').style.justifyContent="flex-start"
             document.querySelector('.footer').classList.add('.hidden')
-            sidebar.style.width="20%"
+            sidebar.style.width="25%"
             btns.style.width="auto"
             btns.style.opacity="1"
             sidebar.style.opacity="1"
@@ -547,7 +561,7 @@ function gridShadowIn() {
         item.setAttribute('id',i)
         i++
       item.addEventListener('mouseover', () => {
-          if(item.textContent==""){
+          if(item.textContent=="" && win==false){
         item.style.boxShadow = "0 0 20px yellowgreen";
           }
           else{
@@ -564,28 +578,125 @@ function gridShadowOut() {
       });
     });
   }
-function gridTokenCreator(token) {
-    let items = document.querySelectorAll('.grid-item');
-    items.forEach(item => {
-      item.addEventListener('click', () => {
-        let player2=players[1].name
-        gridNum=item.id
-        gameboardCreator(gridNum,token)
-        if(item.textContent==""){
-            item.textContent=token
-            if(playerSelector=="human"){
-            if(token=="x"){
-                gridTokenCreator(token="o")
-            }
-            else if(token=="o"){
-                gridTokenCreator(token="x")
-            }
-        }
-        }
-      });
-    });
-  }
 
+
+ 
+
+let tokenPlace
+function gridTokenCreator(token) {
+    for(i=1;i<=9;i++){
+        tokenPlace=token
+        let item=document.getElementById(i)
+        item.addEventListener('click',()=>{
+            gridID=item.id
+            gridPlace(gridID)
+        })
+    }
+  }
+function gridPlace(gridID){
+    item=document.getElementById(gridID)
+    if(item.textContent=="" &&win==false){
+        item.textContent=tokenPlace
+        if(playerSelector=="human"){
+        if(tokenPlace=="x"){
+            gameboardCreator(gridID,tokenPlace)
+            gridTokenCreator(tokenPlace="o")
+            winCheck()
+        }
+        else if(tokenPlace=="o"){
+            gameboardCreator(gridID,tokenPlace)
+            gridTokenCreator(tokenPlace="x")
+            winCheck()
+        }
+    }
+}
+item.removeEventListener('click',gridPlace)
+}
+
+let win=false
+function winCheck(){
+   let n=gameBoard
+   let token
+   if(tokenPlace=="x"){
+       token="o"
+   }
+   else{
+       token="x"
+   }
+   let score1=document.querySelector('.score1')
+   let score2=document.querySelector('.score2')
+   ///////Horizontal Check\\\\\\\\
+   if(n[0]==token && n[1]==token &&n[2]==token &&win==false ){
+     document.getElementById(1).style.color="yellowgreen"
+     document.getElementById(2).style.color="yellowgreen"
+     document.getElementById(3).style.color="yellowgreen"
+     scoreUpdate(score1,score2,token)
+     win=true
+   }
+   if(n[3]==token && n[4]==token &&n[5]==token  &&win==false){
+    document.getElementById(4).style.color="yellowgreen"
+    document.getElementById(5).style.color="yellowgreen"
+    document.getElementById(6).style.color="yellowgreen"
+    scoreUpdate(score1,score2,token)
+    win=true
+   }
+   if(n[6]==token && n[7]==token &&n[8]==token &&win==false ){
+    document.getElementById(7).style.color="yellowgreen"
+     document.getElementById(8).style.color="yellowgreen"
+     document.getElementById(9).style.color="yellowgreen"
+     scoreUpdate(score1,score2,token)
+     win=true
+   }
+   ////////Vertical check\\\\\\\\
+   if(n[0]==token && n[3]==token &&n[6]==token &&win==false ){
+    document.getElementById(1).style.color="yellowgreen"
+    document.getElementById(4).style.color="yellowgreen"
+    document.getElementById(7).style.color="yellowgreen"
+    scoreUpdate(score1,score2,token)
+    win=true
+  }
+  if(n[1]==token && n[4]==token &&n[7]==token  &&win==false){
+   document.getElementById(2).style.color="yellowgreen"
+   document.getElementById(5).style.color="yellowgreen"
+   document.getElementById(8).style.color="yellowgreen"
+   scoreUpdate(score1,score2,token)
+   win=true
+  }
+  if(n[2]==token && n[5]==token &&n[8]==token &&win==false ){
+   document.getElementById(3).style.color="yellowgreen"
+    document.getElementById(6).style.color="yellowgreen"
+    document.getElementById(9).style.color="yellowgreen"
+    scoreUpdate(score1,score2,token)
+    win=true
+  }
+   ///////Diagonal Check\\\\\\\\\
+   if(n[0]==token && n[4]==token &&n[8]==token){
+    document.getElementById(1).style.color="yellowgreen"
+    document.getElementById(5).style.color="yellowgreen"
+    document.getElementById(9).style.color="yellowgreen"
+    scoreUpdate(score1,score2,token)
+    win=true 
+   }
+   if(n[2]==token && n[4]==token &&n[6]==token){
+    document.getElementById(3).style.color="yellowgreen"
+    document.getElementById(5).style.color="yellowgreen"
+    document.getElementById(9).style.color="yellowgreen"
+    scoreUpdate(score1,score2,token)
+    win=true 
+   }
+
+}
+
+function scoreUpdate(score1,score2,token){
+    if(players[0].token==token){
+        players[0].score=parseInt(players[0].score)+1
+        score1.textContent=players[0].score
+    }
+    else{
+        players[1].score=players[1].score+1
+        score2.textContent=players[1].score
+    }
+}
 function gridTokenSelector(player){
       if(players[player].token=="x"){
          gridTokenCreator("x")
