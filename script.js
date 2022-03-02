@@ -758,13 +758,31 @@ continuebtn.addEventListener('click',()=>{
     button=continuebtn
     gameClick(button)
 })
+
+restart.addEventListener('mouseover',()=>{
+    mouseover(restart)})
+newgame.addEventListener('mouseover',()=>{
+    mouseover(newgame)})
+continuebtn.addEventListener('mouseover',()=>{
+        mouseover(continuebtn)})
+
+restart.addEventListener('mouseout',()=>{
+    mouseout(restart)})
+newgame.addEventListener('mouseout',()=>{
+    mouseout(newgame)})
+continuebtn.addEventListener('mouseout',()=>{
+        mouseout(continuebtn)})
+
 function mouseover(button){
     if(button!=continuebtn || win==true){
         button.style.boxShadow="0 0 20px yellowgreen"
     }
     if(button==continuebtn && win==false){
-        button.style.color="0 0 20px red"
+        continuebtn.style.boxShadow="0 0 20px red"
     }
+}
+function mouseout(button){
+    button.style.boxShadow="none"
 }
 function gameClick(button){
      if(button==restart){
