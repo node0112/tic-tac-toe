@@ -295,7 +295,7 @@ function checkvalue(field){
     if(clicks==0){
         condition=false
     }
-    else{
+    else{ 
         condition=true
     }
   }
