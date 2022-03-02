@@ -800,5 +800,15 @@ function gameClick(button){
 
 
 function continueRound(){
-      
+    let roundNo
+    while(grids.firstChild) {
+        grids.removeChild(grids.lastChild)
+      }
+    roundNo=parseInt(document.querySelector('.round-number').textContent)
+    roundNo=roundNo+1
+    document.querySelector('.round-number').textContent=roundNo
+    makeGrid()
+    gridShadowIn()
+    gridShadowOut()
+    gridTokenSelector(0)
   }
