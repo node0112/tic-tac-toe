@@ -4,7 +4,7 @@ const themeSwitch=document.querySelector('.theme-switch')
 const computerBtn=document.querySelector('.computer-container')
 const cardsContainer=document.querySelector('.player-card-container')
 const sidebar=document.querySelector('.sidebar')
-const btns=document.querySelector('.btn')
+const btns=document.querySelectorAll('.btn')
 const humanBtn=document.querySelector('.human-container')
 const player2img=document.querySelector('.player2-image')
 const player2Token=document.querySelector(".player2-token")
@@ -470,10 +470,16 @@ const grids=document.querySelector('.grids')
 function Player(playername,token,score){
     return {name: playername, token: token, score:score }
 }
-function infoCapture(){
+
+let restartCondition=false
+function infoCapture(restartCondition){
     let player1name="Bot 1"
     let player2_Name="sid"
     let score=0
+    document.querySelector(".player1-name").textContent=player1name
+    document.querySelector(".token1").textContent=tokenSelection
+    document.querySelector(".player2-name").textContent=player2_Name
+    document.querySelector(".token2").textContent=player2Token.textContent
     player = new Player(player1name,"o",score)
     playerToArray(player)
     player = new Player(player2_Name,"x",score)
@@ -481,7 +487,12 @@ function infoCapture(){
     /*
     let player1name=document.querySelector('.player1-name').value
     let player2_Name
-    let score=0
+    if(restartCondition==true){
+    let score=
+    }
+    else{
+        score=0
+    }
     if(player2=="human"){
         player2_Name=document.querySelector('.player2name').value
     }
@@ -511,8 +522,10 @@ function clearScreen(){
             document.querySelector('.content-wrapper').style.justifyContent="flex-start"
             document.querySelector('.footer').classList.add('.hidden')
             sidebar.style.width="25%"
-            btns.style.width="auto"
-            btns.style.opacity="1"
+            btns.forEach(btn=>{
+                btn.style.width="100%"
+                 btn.style.opacity="1"
+            })
             sidebar.style.opacity="1"
             grids.style.opacity="1"
             document.querySelector('.logo').style.backgroundColor="rgb(39, 38, 38)"
@@ -684,7 +697,13 @@ function winCheck(){
     scoreUpdate(score1,score2,token)
     win=true 
    }
-
+   if(win==true){
+       continuebtn.addEventListener('click',()=>{
+           button=continuebtn
+           gameClick(button)
+       })
+       continuebtn.style.backgroundColor="rgb(166, 255, 0)"
+   }
 }
 
 function scoreUpdate(score1,score2,token){
@@ -720,4 +739,48 @@ function gridTokenSelector(player){
   function gameboardCreator(gridNum,token){
       gameBoard[gridNum-1]=token
       console.log(gameBoard)
+  }
+
+  /////////////Game Button Functions\\\\\\\\\\\\
+  const restart=document.querySelector('.restart-button')
+  const newgame=document.querySelector('.newgame-button')
+  const continuebtn=document.querySelector('.continue-button')
+
+restart.addEventListener('click',()=>{
+      button=restart
+      gameClick(button)
+  })
+newgame.addEventListener('click',()=>{
+    button=newgame
+    gameClick(button)
+})
+continuebtn.addEventListener('click',()=>{
+    button=continuebtn
+    gameClick(button)
+})
+function mouseover(button){
+    if(button!=continuebtn || win==true){
+        button.style.boxShadow="0 0 20px yellowgreen"
+    }
+    if(button==continuebtn && win==false){
+        button.style.color="0 0 20px red"
+    }
+}
+function gameClick(button){
+     if(button==restart){
+         restartCondition=true
+         infoCapture(restartCondition)
+     }
+     if(button==newgame){
+        newgame.style.backgroundColor="red"
+        setTimeout(()=>{location.reload()},500)
+     }
+     if(button==continuebtn){
+         continueRound()
+     }
+}
+
+
+function continueRound(){
+      
   }
