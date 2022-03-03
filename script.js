@@ -693,7 +693,7 @@ function winCheck(){
    if(n[2]==token && n[4]==token &&n[6]==token){
     document.getElementById(3).style.color="yellowgreen"
     document.getElementById(5).style.color="yellowgreen"
-    document.getElementById(9).style.color="yellowgreen"
+    document.getElementById(7).style.color="yellowgreen"
     scoreUpdate(score1,score2,token)
     win=true 
    }
@@ -754,10 +754,7 @@ newgame.addEventListener('click',()=>{
     button=newgame
     gameClick(button)
 })
-continuebtn.addEventListener('click',()=>{
-    button=continuebtn
-    gameClick(button)
-})
+
 
 restart.addEventListener('mouseover',()=>{
     mouseover(restart)})
@@ -800,10 +797,12 @@ function gameClick(button){
 
 
 function continueRound(){
+    if(win==true){
     let roundNo
     while(grids.firstChild) {
         grids.removeChild(grids.lastChild)
       }
+    gameBoard = ["","","","","","","","",""]
     roundNo=parseInt(document.querySelector('.round-number').textContent)
     roundNo=roundNo+1
     document.querySelector('.round-number').textContent=roundNo
@@ -811,4 +810,8 @@ function continueRound(){
     gridShadowIn()
     gridShadowOut()
     gridTokenSelector(0)
+    continuebtn.removeEventListener('click',()=>{})
+    continuebtn.style.backgroundColor="gray"
+    win=false
+    }
   }
