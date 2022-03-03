@@ -9,10 +9,12 @@ const humanBtn=document.querySelector('.human-container')
 const player2img=document.querySelector('.player2-image')
 const player2Token=document.querySelector(".player2-token")
 const player2Header=document.querySelector('.player2')
-const player2Name=document.querySelector('.player2name')
+const player2Name=document.querySelector('.player2-name')
 const headerToken=document.querySelector('.header-token')
 const startContainer=document.querySelector('.start-container')
 const startBtn=document.querySelector(".start")
+const player1nme=document.querySelector(".player1name")
+const player2nme=document.querySelector(".player2name")
 let input=document.querySelectorAll('input')
 let gridID
 let theme="light"
@@ -250,14 +252,9 @@ startBtn.addEventListener('mouseout', ()=>{
     startBtn.style.color="yellowgreen"
 })
 
-startAnimation()
 startBtn.addEventListener('click', ()=>{
-    clearScreen()
     playerSelector="human"
     player2="human"
-    player2Token.textContent="o"
-    tokenSelection="x"
-    /*
     if(playerSelector=="human"){
         field=player2Name
         checkvalue(field)
@@ -271,7 +268,6 @@ startBtn.addEventListener('click', ()=>{
     else{
         clearScreen()
     }
-    */
 })
 
 /* Set the width of the side navigation to 250px */
@@ -471,38 +467,24 @@ function Player(playername,token,score){
     return {name: playername, token: token, score:score }
 }
 
-let restartCondition=false
-function infoCapture(restartCondition){
-    let player1name="Bot 1"
-    let player2_Name="sid"
-    let score=0
-    document.querySelector(".player1-name").textContent=player1name
-    document.querySelector(".token1").textContent=tokenSelection
-    document.querySelector(".player2-name").textContent=player2_Name
-    document.querySelector(".token2").textContent=player2Token.textContent
-    player = new Player(player1name,"o",score)
-    playerToArray(player)
-    player = new Player(player2_Name,"x",score)
-    playerToArray(player)
-    /*
+function infoCapture(restartCondition){    
     let player1name=document.querySelector('.player1-name').value
     let player2_Name
-    if(restartCondition==true){
-    let score=
-    }
-    else{
-        score=0
-    }
+    score=0
     if(player2=="human"){
-        player2_Name=document.querySelector('.player2name').value
+        player2_Name=document.querySelector('.player2-name').value
     }
     else if(player2=="computer"){
         player2_name="computer"
     }
     player = new Player(player1name,tokenSelection,score)
     playerToArray(player)
-    player = new Player(player2_Name,player2Token.textContent,score)
-    playerToArray(player)*/
+    player = new Player(player2_Name,player2Token.textContent.toLowerCase(),score)
+    playerToArray(player)
+    player1nme.textContent=players[0].name
+    document.querySelector(".token1").textContent=players[0].token
+    player2nme.textContent=players[1].name
+    document.querySelector(".token2").textContent=players[1].token
 }
 function playerToArray(player){
     players.push(player)
@@ -612,11 +594,13 @@ function gridPlace(gridID){
         item.textContent=tokenPlace
         if(playerSelector=="human"){
         if(tokenPlace=="x"){
+            playerHighlight("o")
             gameboardCreator(gridID,tokenPlace)
             gridTokenCreator(tokenPlace="o")
             winCheck()
         }
         else if(tokenPlace=="o"){
+            playerHighlight("x")
             gameboardCreator(gridID,tokenPlace)
             gridTokenCreator(tokenPlace="x")
             winCheck()
@@ -627,9 +611,11 @@ item.removeEventListener('click',gridPlace)
 }
 
 let win=false
+const winner=document.querySelector('.current-winner')
 function winCheck(){
    let n=gameBoard
    let token
+   let places=0
    if(tokenPlace=="x"){
        token="o"
    }
@@ -697,12 +683,24 @@ function winCheck(){
     scoreUpdate(score1,score2,token)
     win=true 
    }
+   for(i=0;i<9;i++){
+    if(n[i]!=""){
+       places=places+1;
+    }
+}
+if(places==9){
+    if(win==false){
+    win=true
+    winner.textContent="It's a Draw"
+    }
+}
    if(win==true){
        continuebtn.addEventListener('click',()=>{
            button=continuebtn
            gameClick(button)
        })
        continuebtn.style.backgroundColor="rgb(166, 255, 0)"
+       restart.style.backgroundColor="gray"
    }
 }
 
@@ -710,10 +708,12 @@ function scoreUpdate(score1,score2,token){
     if(players[0].token==token){
         players[0].score=parseInt(players[0].score)+1
         score1.textContent=players[0].score
+        winner.textContent=players[0].name.toUpperCase()+" Wins!"
     }
     else{
         players[1].score=players[1].score+1
         score2.textContent=players[1].score
+        winner.textContent=players[1].name.toUpperCase()+" Wins!"
     }
 }
 function gridTokenSelector(player){
@@ -725,6 +725,17 @@ function gridTokenSelector(player){
       }
   }
 
+  function playerHighlight(token){
+       if(players[0].token==token){
+          player1nme.style.color="yellowgreen"
+          player2nme.style.color="gray"
+       }
+       if(players[1].token==token){
+        player2nme.style.color="yellowgreen"
+        player1nme.style.color="gray"
+     }
+       
+  }
   function computerTokenPlace(){//using the minimax algorithm
 
   }
@@ -777,14 +788,16 @@ function mouseover(button){
     if(button==continuebtn && win==false){
         continuebtn.style.boxShadow="0 0 20px red"
     }
+    else if(button==restart && win==true){
+        restart.style.boxShadow="0 0 20px red"
+    }
 }
 function mouseout(button){
     button.style.boxShadow="none"
 }
 function gameClick(button){
      if(button==restart){
-         restartCondition=true
-         infoCapture(restartCondition)
+         restartRound()
      }
      if(button==newgame){
         newgame.style.backgroundColor="red"
@@ -795,10 +808,22 @@ function gameClick(button){
      }
 }
 
-
+function restartRound(){
+    if(win==false){
+    gameBoard = ["","","","","","","","",""]
+    while(grids.firstChild) {
+        grids.removeChild(grids.lastChild)
+      }
+    makeGrid()
+    gridShadowIn()
+    gridShadowOut()
+    gridTokenSelector(0)
+    }
+}
 function continueRound(){
     if(win==true){
     let roundNo
+    winner.textContent=""
     while(grids.firstChild) {
         grids.removeChild(grids.lastChild)
       }
@@ -812,6 +837,9 @@ function continueRound(){
     gridTokenSelector(0)
     continuebtn.removeEventListener('click',()=>{})
     continuebtn.style.backgroundColor="gray"
+    restart.style.backgroundColor="rgb(166, 255, 0)"
     win=false
+    player1nme.style.color="yellowgreen"
+    player2nme.style.color="gray"
     }
   }
